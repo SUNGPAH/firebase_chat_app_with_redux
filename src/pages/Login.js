@@ -22,7 +22,6 @@ const Login = () => {
       return
     }
     setLoading(true);
-
     firebaseApp.auth().signInWithEmailAndPassword(email, password)
     .then((user) => {
       const uid = (firebaseApp.auth().currentUser || {}).uid

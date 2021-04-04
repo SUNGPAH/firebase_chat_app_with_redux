@@ -11,6 +11,9 @@ function* fetchUser(action) {
   }
 }
 
+//advantage of using Saga 
+  // -> simple object
+
 function* mySaga() {
   yield takeEvery("USER_FETCH_REQUESTED", fetchUser);
 }
