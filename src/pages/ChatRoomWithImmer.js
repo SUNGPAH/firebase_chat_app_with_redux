@@ -4,6 +4,7 @@ import {db, firebaseApp, firebase} from '../firebase';
 import { BiSend, BiLogOut, BiCommentAdd} from "react-icons/bi";
 import ChatCard from '../components/chats/ChatCard';
 import {useImmer} from 'use-immer';
+import {useSelector} from 'react-redux';
 
 const Chats = React.memo(({chats, users, uid, onEmojiClick}) => {
   return <>
@@ -20,23 +21,19 @@ const Chats = React.memo(({chats, users, uid, onEmojiClick}) => {
 })
 
 const ChatRoomWithImmer = (props) => {
+  const userProfile = useSelector(state => state.user.userProfile);
+  const uid = userProfile.uid;
   const history = useHistory();
   const [chats, setChats] = useImmer([]);
-  const [uid, setUid] = useState("");
   const [chatContent, setChatContent] = useState("");
   const [users, setUsers] = useState({});
   const { channelId } = useParams();
   const messagesEndRef = useRef(null)
 
   useEffect(() => {
-    firebaseApp.auth().onAuthStateChanged((user) => {
-      const uid = (firebaseApp.auth().currentUser || {}).uid
-      if(uid){
-        setUid(uid);
-      }else{
-        window.location = "/login"
-      }
-    })
+    if(!userProfile){
+      window.location = "/login";
+    }
   }, [])
 
   const scrollToBottom = () => {
@@ -126,7 +123,7 @@ const ChatRoomWithImmer = (props) => {
     history.push('/createChat');
   }
 
-  const onEmojiClick = (emojiKey, chatId) => {    
+  const onEmojiClick = (emojiKey, chatId) => {   
     const chatRef = db.collection('chat').doc('room_' + channelId).collection('messages').doc(chatId)
     chatRef.get().then(doc => {
       const data = doc.data()      
@@ -152,6 +149,11 @@ const ChatRoomWithImmer = (props) => {
   return <div style={{position:'relative'}} className="vh100">
     <div className="flex fdr vh100">
       <div className="w200 bg_black p16">
+        {userProfile &&
+          <div style={{marginBottom:12,}}>
+            <span className="color_white">Hi! {userProfile.nickName}</span>
+          </div>
+        }
         <div className="color_white flex fdr aic cursor_pointer" onClick={evt => {logout()}}>
           <BiLogOut/>
           <span className="color_white pl8">Logout</span>

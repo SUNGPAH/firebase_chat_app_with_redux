@@ -1,5 +1,6 @@
 export const SET_JWT_TOKEN = 'SET_JWT_TOKEN'
 export const SET_USER_PROFILE = 'SET_USER_PROFILE'
+export const SECOND_SAGA = 'SECOND_SAGA';
 
 export const setJwtToken = (jwtToken) => ({
   type: SET_JWT_TOKEN,
@@ -14,6 +15,7 @@ export const setUserProfile = (userProfile) => ({
 const initialState = {
   jwtToken: null,
   userProfile: null,
+  message: "",
 }
 
 const user = (state = initialState, action) => {
@@ -29,6 +31,13 @@ const user = (state = initialState, action) => {
       return {
         ...state,
         userProfile: action.payload
+      }
+    }
+
+    case SECOND_SAGA: {
+      return {
+        ...state,
+        message: action.payload
       }
     }
     default:

@@ -101,9 +101,6 @@ const ChatRoom = (props) => {
           const data = change.doc.data();
           data.id = change.doc.id
           setModifyCandidate(data);  
-
-          //여기서 뭔가 바로 해야 하지 않을까 씁다잉.
-          
         }
         if (change.type === "removed") {
           console.log("remove message: ", change.doc.data());

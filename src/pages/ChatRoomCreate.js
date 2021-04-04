@@ -7,6 +7,7 @@ import {useSelector, useDispatch} from 'react-redux';
 const ChatRoomCreate = (props) => {
   const dispatch = useDispatch();
   const userProfile = useSelector(state => state.user.userProfile);
+  const message = useSelector(state => state.user.message);
   const history = useHistory();
   const [channel, setChannel] = useState("");
 
@@ -27,7 +28,10 @@ const ChatRoomCreate = (props) => {
   return <div className="vw100 vh100 flex aic jcc">
     <div className="posFx top0 right0 p8">
       {userProfile && 
+        <>
         <span>Name: {userProfile.nickName}</span>
+        <span>{message}</span>
+        </>
       }
       <div className="flex fdr aic cursor_pointer" onClick={evt => {logout()}}>
         <BiLogOut/> 

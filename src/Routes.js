@@ -20,7 +20,7 @@ class Routes extends React.Component {
           <Route exact path="/signup" component={Signup}/>
           <Route exact path="/createChat" component={ChatRoomCreate}/>
           <Route exact path="/login" component={Login}/>
-          <Route exact path="/chat/:channelId" component={ChatRoom}/>
+          <Route exact path="/chat/:channelId" component={ChatRoomWithImmer}/>
           <Route exact path="/chat_immer/:channelId" component={ChatRoomWithImmer}/>
           <Route exact path="/test" component={Test}/>
         </Switch>

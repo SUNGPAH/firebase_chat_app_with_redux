@@ -26,6 +26,7 @@ const Login = () => {
       const uid = (firebaseApp.auth().currentUser || {}).uid
       if(uid){
         dispatch({type: 'USER_FETCH_REQUESTED', payload: {uid, history}})
+        dispatch({type: 'API_ASYNC', payload: 1,})
       }
     })
     .catch((error) => {
