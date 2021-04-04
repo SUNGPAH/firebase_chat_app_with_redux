@@ -2,9 +2,10 @@ import React, {useState} from 'react';
 import {useHistory} from 'react-router-dom';
 import {firebaseApp} from '../firebase';
 import {BiLogOut} from "react-icons/bi";
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 
 const ChatRoomCreate = (props) => {
+  const dispatch = useDispatch();
   const userProfile = useSelector(state => state.user.userProfile);
   const history = useHistory();
   const [channel, setChannel] = useState("");
@@ -20,6 +21,7 @@ const ChatRoomCreate = (props) => {
   const logout = () => {
     firebaseApp.auth().signOut()
     history.push('/login');
+    dispatch({type:"USER_LOGOUT"});
   }
 
   return <div className="vw100 vh100 flex aic jcc">

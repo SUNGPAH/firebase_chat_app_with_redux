@@ -8,7 +8,6 @@ export const userLogOut = () => ({
 
 const appReducer = combineReducers({
   user,
-  //여기에 추가될 reducer를 선언하기.
 })
 
 const rootReducer = (state, action) => {

@@ -1,5 +1,7 @@
 import reducers from '../reducers';
 //will import sagas here.
+import mySaga from '../sagas'
+
 import {applyMiddleware, createStore} from 'redux';
 import createSagaMiddleware from 'redux-saga'
 import {composeWithDevTools} from 'redux-devtools-extension';
@@ -11,6 +13,7 @@ const persistConfig = {
   key: 'root',
   storage
 };
+
 const enhancedReducer = persistReducer(persistConfig, reducers);
 
 //has created store here.
@@ -25,5 +28,6 @@ export default function configureStore() {
     composeWithDevTools(applyMiddleware(sagaMiddleware)),
   );
   const persistor = persistStore(store);
+  sagaMiddleware.run(mySaga)
   return {store, persistor};
 }

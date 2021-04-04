@@ -3,10 +3,11 @@ import '../App.css';
 import {useHistory} from 'react-router-dom';
 import {db, firebaseApp} from '../firebase';
 import Spinner from '../components/Spinner';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {setUserProfile} from '../reducers/user';
 
 const Login = () => {
+  const userProfile = useSelector(state => state.user.userProfile);
   const dispatch = useDispatch();
   const history = useHistory();
   const [email, setEmail] = useState("");
@@ -25,20 +26,8 @@ const Login = () => {
     firebaseApp.auth().signInWithEmailAndPassword(email, password)
     .then((user) => {
       const uid = (firebaseApp.auth().currentUser || {}).uid
-
-      db.collection('user').doc(uid).get().then((doc) => {
-        dispatch(setUserProfile(doc.data()))
-      })
-
       if(uid){
-        setLoginStatus(true);
-        setEmail("");
-        setPassword("");
-        history.push('/createChat')
-        setLoading(false);
-      }else{
-        alert('error');
-        setLoading(false);
+        dispatch({type: 'USER_FETCH_REQUESTED', payload: {uid, history}})
       }
     })
     .catch((error) => {
@@ -54,18 +43,18 @@ const Login = () => {
   const logout = () => {
     firebaseApp.auth().signOut()
     setLoginStatus(false);
+    dispatch({type:"USER_LOGOUT"});
   }
 
   useEffect(() => {
-    firebaseApp.auth().onAuthStateChanged((user) => {
-      setInitLoaded(true)
-      const uid = (firebaseApp.auth().currentUser || {}).uid
-      if(uid){
-        setLoginStatus(true);
-        history.push('/createChat')
-      }else{
-      }
-    })
+    //처음에 selector에 값이 있다면!
+    if(userProfile){
+      setLoginStatus(false);
+      setInitLoaded(true);  
+      history.push("/createChat");
+    }else{
+      setInitLoaded(true);
+    }    
   }, [])
 
   const goToSignup = () => {
