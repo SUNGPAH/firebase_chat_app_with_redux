@@ -4,7 +4,6 @@ import {useHistory} from 'react-router-dom';
 import {db, firebaseApp} from '../firebase';
 import Spinner from '../components/Spinner';
 import {useDispatch, useSelector} from 'react-redux';
-import {setUserProfile} from '../reducers/user';
 
 const Login = () => {
   const userProfile = useSelector(state => state.user.userProfile);
@@ -46,7 +45,6 @@ const Login = () => {
   }
 
   useEffect(() => {
-    //처음에 selector에 값이 있다면!
     if(userProfile){
       setLoginStatus(false);
       setInitLoaded(true);  
