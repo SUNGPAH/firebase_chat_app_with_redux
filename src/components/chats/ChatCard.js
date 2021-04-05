@@ -1,4 +1,5 @@
 import React from 'react';
+import moment from 'moment';
 
 const ChatCard = React.memo(({chat, users, index, uid, onEmojiClick}) => {
   const who = () => {
@@ -10,17 +11,26 @@ const ChatCard = React.memo(({chat, users, index, uid, onEmojiClick}) => {
     }
   } 
 
+  const when = () => {    
+    return moment(chat.created * 1000).format("DD MMM YYYY hh:mm a") //parse integer
+  }
+
   const renderEmojiSection = () => {
     const emojiObj = chat.emoji
     return <>
-      <div className="fdr">
+      <div className="fdr pt16">
         <EmojiButton emojiKey={'1'} emojiValue={"😎"} emojiObj={emojiObj}/>
         <EmojiButton emojiKey={'2'} emojiValue={"🤣"} emojiObj={emojiObj}/>
-      </div>  
+        <EmojiButton emojiKey={'3'} 
+        emojiType={'url'}
+        emojiValue={"https://i.pinimg.com/originals/42/75/c0/4275c0c8a75c2f8fdb738fc7236af4c3.gif"} emojiObj={emojiObj}/>
+        <EmojiButton emojiKey={'4'} 
+        emojiType={'url'}
+        emojiValue={"https://i.pinimg.com/originals/d5/44/ff/d544ffca4ecb461fc19da7e384cbc6d5.gif"} emojiObj={emojiObj}/>      </div>  
     </>
   }
 
-  const EmojiButton = ({emojiKey, emojiValue, emojiObj}) => {
+  const EmojiButton = ({emojiKey, emojiValue, emojiType, emojiObj}) => {
     let extraClassName = ""
     if(emojiObj && emojiObj[emojiKey]){
       if(emojiObj[emojiKey].includes(uid)){
@@ -30,7 +40,14 @@ const ChatCard = React.memo(({chat, users, index, uid, onEmojiClick}) => {
 
     return <div>
       <div onClick={e=> onEmojiClick(emojiKey, chat.id)} className={`emojiRec flex fdr aic ${extraClassName}`}>
-        <span>{emojiValue}</span>
+        
+        {
+          emojiType === "url" ?
+          <img src={emojiValue} style={{height:'100%',}}/>
+          :
+          <span>{emojiValue}</span>
+        }
+
         <span>
           {emojiObj && emojiObj[emojiKey] &&
             <div>{emojiObj[emojiKey].length}</div>
@@ -48,7 +65,7 @@ const ChatCard = React.memo(({chat, users, index, uid, onEmojiClick}) => {
     <div className="pl16 f1">
       <div>
         <span className="bold">{who()}</span>
-        <span className="fs color_gray pl8">-?</span>
+        <span className="fs color_gray pl8">{when()}</span>
       </div>
       <div className="pt8">
         {chat.content}
