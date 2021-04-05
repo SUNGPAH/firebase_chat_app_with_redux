@@ -40,14 +40,12 @@ const ChatCard = React.memo(({chat, users, index, uid, onEmojiClick}) => {
 
     return <div>
       <div onClick={e=> onEmojiClick(emojiKey, chat.id)} className={`emojiRec flex fdr aic ${extraClassName}`}>
-        
         {
           emojiType === "url" ?
           <img src={emojiValue} style={{height:'100%',}}/>
           :
           <span>{emojiValue}</span>
         }
-
         <span>
           {emojiObj && emojiObj[emojiKey] &&
             <div>{emojiObj[emojiKey].length}</div>
