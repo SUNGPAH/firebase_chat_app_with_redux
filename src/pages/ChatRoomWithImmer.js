@@ -22,7 +22,8 @@ const Chats = React.memo(({chats, users, uid, onEmojiClick}) => {
 
 const ChatRoomWithImmer = (props) => {
   const userProfile = useSelector(state => state.user.userProfile);
-  const uid = userProfile.uid;
+  const uid = userProfile ? userProfile.uid : "";
+
   const history = useHistory();
   const [chats, setChats] = useImmer([]);
   const [chatContent, setChatContent] = useState("");

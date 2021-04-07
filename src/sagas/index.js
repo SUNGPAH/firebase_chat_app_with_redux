@@ -5,6 +5,8 @@ function* fetchUser(action) {
   try {
     const user = yield call(firebaseLogin, action.payload.uid);
     yield put({type: "SET_USER_PROFILE", payload: user.data()});
+
+
     action.payload.history.push("/createChat");    
   } catch (e) {
     yield put({type: "USER_FETCH_FAILED", message: e.message});
