@@ -51,8 +51,8 @@ const ChatRoom = (props) => {
     scrollToBottom()
   }, [chats]);
 
-  const addDocument = () => {
-    db
+  const addDocument = async () => {
+    await db
       .collection('chat')
       .doc('room_' + channelId)
       .collection('messages')
@@ -61,9 +61,8 @@ const ChatRoom = (props) => {
         content: chatContent,
         created: firebase.firestore.Timestamp.now().seconds
       })
-      .then((ref) => {
-        setChatContent('');
-      })
+  
+    setChatContent('');
   }
 
   useEffect(async () => {

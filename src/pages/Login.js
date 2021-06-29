@@ -19,29 +19,28 @@ const Login = () => {
     logout();
   }, [])
 
-  const login = () => {
+  const login = async () => {
     if(email.length < 3) {
       alert('too short');
       return
     }
     setLoading(true);
-    firebaseApp.auth().signInWithEmailAndPassword(email, password)
-    .then((user) => {
-      const uid = (firebaseApp.auth().currentUser || {}).uid
 
+    try{
+      await firebaseApp.auth().signInWithEmailAndPassword(email, password)
+      const uid = (firebaseApp.auth().currentUser || {}).uid
       if(uid){
         dispatch({type: 'USER_FETCH_REQUESTED', payload: {uid, history}})
         dispatch({type: 'API_ASYNC', payload: 1,})
-      }
-    })
-    .catch((error) => {
+      }  
+    }catch(error){
       setLoading(false);
       var errorCode = error.code;
       var errorMessage = error.message;
       if(errorCode === "auth/user-not-found"){
         alert('가입하세요');
       }
-    });
+    }
   }
 
   const logout = () => {
