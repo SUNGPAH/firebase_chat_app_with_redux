@@ -15,6 +15,10 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [loginStatus, setLoginStatus] = useState(false);
 
+  useEffect(() => {
+    logout();
+  }, [])
+
   const login = () => {
     if(email.length < 3) {
       alert('too short');
@@ -24,6 +28,7 @@ const Login = () => {
     firebaseApp.auth().signInWithEmailAndPassword(email, password)
     .then((user) => {
       const uid = (firebaseApp.auth().currentUser || {}).uid
+
       if(uid){
         dispatch({type: 'USER_FETCH_REQUESTED', payload: {uid, history}})
         dispatch({type: 'API_ASYNC', payload: 1,})

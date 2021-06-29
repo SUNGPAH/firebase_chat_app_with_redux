@@ -3,7 +3,9 @@ import {firebaseLogin, someGetExample} from './functions';
 
 function* fetchUser(action) {
   try {
+
     const user = yield call(firebaseLogin, action.payload.uid);
+    // console.log(user);
     yield put({type: "SET_USER_PROFILE", payload: user.data()});
 
 

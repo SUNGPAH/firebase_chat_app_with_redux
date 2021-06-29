@@ -31,19 +31,8 @@ const ChatRoom = (props) => {
   const { channelId } = useParams();
   const messagesEndRef = useRef(null)
   const [modifyCandidate, setModifyCandidate] = useState(null);
-  const [text, setText] = useState("");
-  const [search, setSearch] = useState("");
 
-  const onClick = () => {
-    setSearch(text);
-  }
-
-  const memoizedText = useMemo(() => {
-    console.log('use memo');
-    return <div>{text} - {search}</div>
-  }, [search])
-
-  useEffect(() => {
+  useEffect(async () => {
     firebaseApp.auth().onAuthStateChanged((user) => {
       const uid = (firebaseApp.auth().currentUser || {}).uid
       if(uid){
@@ -77,15 +66,14 @@ const ChatRoom = (props) => {
       })
   }
 
-  useEffect(() => {
+  useEffect(async () => {
     const chatRef = db.collection('chat').doc('room_' + channelId).collection('messages')
-    chatRef.orderBy("created").get().then((snapshot) => {
-      const data = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setChats(data);
-    })
+    const snapshot = await chatRef.orderBy("created").get(); 
+    const data = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setChats(data);
   }, [])
 
   useEffect(() => {
@@ -128,7 +116,7 @@ const ChatRoom = (props) => {
     return copied
   }, [modifyCandidate])
 
-  useEffect(() => {
+  useEffect(async () => {
     if(chats.length === 0){
       return ;
     }
@@ -143,50 +131,49 @@ const ChatRoom = (props) => {
 
     var usersRef = db.collection("user");
     var arr = {};
-    usersRef.where("uid", 'in',  uids).get().then((querySnapshot) => {
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        arr[data.uid] = data;
-      })
-      setUsers(arr);
-    });  
+    
+    const querySnapshot = await usersRef.where("uid", 'in',  uids).get()
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      arr[data.uid] = data;
+    })
+    setUsers(arr);
   }, [chats])
 
   const onTextareaChange = (evt) => {
     setChatContent(evt.target.value);
   }
 
-  const logout = () => {
-    firebaseApp.auth().signOut().then(() => {
-      history.push('/login');
-    })
+  const logout = async () => {
+    await firebaseApp.auth().signOut();
+    history.push('/login');
   }
 
   const createChatRoom = () => {
     history.push('/createChat');
   }
 
-  const onEmojiClick = (emojiKey, chatId) => {    
+  const onEmojiClick = async (emojiKey, chatId) => {    
     const chatRef = db.collection('chat').doc('room_' + channelId).collection('messages').doc(chatId)
-    chatRef.get().then(doc => {
-      const data = doc.data()      
-      const emojiObj = {...data.emoji};
-      let uids = emojiObj[emojiKey];
+    const doc = await chatRef.get()
 
-      if (uids){
-        if(uids.includes(uid)){
-        }else{
-          uids.push(uid)
-        }
+    const data = doc.data()      
+    const emojiObj = {...data.emoji};
+    let uids = emojiObj[emojiKey];
+
+    if (uids){
+      if(uids.includes(uid)){
       }else{
-        uids = [uid]
+        uids.push(uid)
       }
+    }else{
+      uids = [uid]
+    }
 
-      emojiObj[emojiKey] = uids
-      chatRef.update({
-        emoji: emojiObj
-      })  
-    })
+    emojiObj[emojiKey] = uids
+    chatRef.update({
+      emoji: emojiObj
+    })  
   }
 
   return <div style={{position:'relative'}} className="vh100">

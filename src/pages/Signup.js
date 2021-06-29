@@ -28,12 +28,12 @@ const Signup = () => {
       const uid = (firebaseApp.auth().currentUser || {}).uid
       console.log(uid); //tngyNVDEKdY6WqpLVTb3BEbTIfZ2
 
+
       if(uid){
         db
         .collection('user')
         .doc(uid)
         .set({
-          id: uid,
           uid: uid,
           nickName: nickName,
           age: 20, 
@@ -41,12 +41,17 @@ const Signup = () => {
           created: firebase.firestore.Timestamp.now().seconds
         })
         .then((ref) => {
+
+
           const payload = {
             id: uid, 
             uid: uid,
             email: email,
             nickName: nickName,
           }
+
+
+          console.log(payload);
           dispatch(setUserProfile(payload));
 
           setLoginStatus(true);
@@ -55,6 +60,7 @@ const Signup = () => {
           setPassword("");
           history.push('/createChat')
           setLoading(false);
+
         })
       }else{
         alert('error');
@@ -68,15 +74,15 @@ const Signup = () => {
   }
 
   useEffect(() => {
-    firebaseApp.auth().onAuthStateChanged((user) => {
-      const uid = (firebaseApp.auth().currentUser || {}).uid
-      if(uid){
-        setLoginStatus(true);
-        setUid(uid);
-        history.push('/app')
-      }else{
-      }
-    })
+    // firebaseApp.auth().onAuthStateChanged((user) => {
+    //   const uid = (firebaseApp.auth().currentUser || {}).uid
+    //   if(uid){
+    //     setLoginStatus(true);
+    //     setUid(uid);
+    //     history.push('/app')
+    //   }else{
+    //   }
+    // })
   }, [])
 
   return (
