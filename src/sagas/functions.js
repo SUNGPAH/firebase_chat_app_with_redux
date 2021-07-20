@@ -14,3 +14,11 @@ export const someGetExample = async (index) => {
   return result
 }
 
+export const getLandingCourses = async () => {
+  const res = await fetch('https://api.ringleplus.com/api/v4/student/landing/course?locale=en');
+  const data = res.json()
+  return data
+}
+
+
+

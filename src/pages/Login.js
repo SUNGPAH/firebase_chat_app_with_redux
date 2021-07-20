@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const Login = () => {
   const userProfile = useSelector(state => state.user.userProfile);
+  const landingCourses = useSelector(state => state.user.landingCourses);
   const dispatch = useDispatch();
   const history = useHistory();
   const [email, setEmail] = useState("");
@@ -17,6 +18,10 @@ const Login = () => {
 
   useEffect(() => {
     logout();
+  }, [])
+
+  useEffect(() => {
+    dispatch({type: "FETCH_LANDING_COURSES"});
   }, [])
 
   const login = async () => {
@@ -69,6 +74,7 @@ const Login = () => {
 
   return (
     <div >      
+      {landingCourses.length}
       <Spinner show={loading}/>
       {
         loginStatus ? 
